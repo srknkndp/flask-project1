@@ -57,10 +57,9 @@ def register():
         email = form.email.data
         password = form.password.data # sha256_crypt şifreleme için kullanabilirsin
         confirm_date = form.confirm_date.data
-        ipaddress = get_my_ip(ipaddress)
         cursor = mysql.get_db().cursor()
-        sorgu = "INSERT INTO users(name, username, email, password, confirm_date, ipaddress) VALUES(%s,%s,%s,%s,%s,%s)"
-        cursor.execute(sorgu,(name, username, email, password, confirm_date, ipaddress)) # Demet olarak gönderiyoruz ',' unutma
+        sorgu = "INSERT INTO users(name, username, email, password, confirm_date VALUES(%s,%s,%s,%s,%s)"
+        cursor.execute(sorgu,(name, username, email, password, confirm_date)) # Demet olarak gönderiyoruz ',' unutma
         mysql.get_db().commit() # Veri tabanındaki değişiklikler için commit yapmalısın.
         
         cursor.close() # Veritabanı güncellendikten sonra cursorı kapat.
