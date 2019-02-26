@@ -1,12 +1,25 @@
-{% extends "layout.html" %}
-{% block title %}
-Index Page
-{% endblock  %}
+{% include "layout.html" %}
 
 {% block body %}
-<div class="jumbotron text-center">
-    <h3>MAIN PAGE</h3>
-    <hr>
-    <p>Flask ile ilk Blog projeme hoşgeldiniz.</p>
-</div>
-{% endblock %}
+    <div class="jumbotron text-center">
+        <h3>
+            Welcome to my world!
+        </h3>
+        <hr>
+        <p>
+            never give up... 
+        </p>
+
+    </div>
+    <ul>
+        {% for article in articles %}
+                <p><strong>Article Id :</strong> 
+                    {{article.id}}
+                  <strong>Title :</strong> 
+                    {{article.title}}
+                  <strong>Content :</strong> 
+                    {{article.content}}
+                </p> 
+        {% endfor %}
+    </ul>
+{% endblock body %}
