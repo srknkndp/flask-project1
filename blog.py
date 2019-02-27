@@ -12,6 +12,16 @@ from passlib.hash import sha256_crypt
 
 app = Flask(__name__)
 
+# MySQL Configirasyonu bknz https://flask-mysqldb.readthedocs.io/en/latest/
+app.config["MYSQL_HOST"] = "localhost"
+app.config["MYSQL_USER"] = "root"
+app.config["MYSQL_PASSWORD"] = ""
+app.config["MYSQL_DB"] = "flask_blog"
+app.config["MYSQL_CURSORCLASS"] = "DictCursor"
+
+mysql = MySQL(app)
+
+
 @app.route('/')
 def main():
     articles = [
