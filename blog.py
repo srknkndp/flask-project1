@@ -21,6 +21,10 @@ app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 mysql = MySQL(app)
 
+# User register form
+class RegisterForm(Form):
+    name = StringField("İsim Soyisim", validators = [validators.Length(min=4, max=25)])
+
 
 @app.route('/')
 def main():
