@@ -21,10 +21,14 @@ app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 mysql = MySQL(app)
 
-# User register form
+# User register form (WTF formlarını Flask ile uyumunu kontrol et)
 class RegisterForm(Form):
     name = StringField("İsim Soyisim", validators = [validators.Length(min=4, max=25)])
-
+    username = StringField("Kullanıcı Adı", validators = [validators.Length(min=5, max=35)])
+    email = StringField("Email Adresi", validators = [validators.Email(message="Lütfen geçerli bir email adresi giriniz!")])
+    password = PasswordField("Parola", validators = [validators.DataRequired(message="Lütfen bir parola belirleyin!!!"),
+                                                    validators.EqualTo(fieldname="confirm", message="Parolanız uyuşmuyor!!!")])
+    confirm = PasswordField("Parola Doğrula")
 
 @app.route('/')
 def main():
@@ -38,6 +42,11 @@ def main():
 @app.route("/about")
 def about():
     return render_template("about.html")
+
+# Kayıt sayfası oluşturuyoruz
+@app.route("/register")
+def register():
+    return render_template("register.html")
 
 # Dinamik URL Tanımlama
 @app.route('/article/<string:id>')
