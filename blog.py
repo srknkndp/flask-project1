@@ -44,9 +44,13 @@ def about():
     return render_template("about.html")
 
 # Kayıt sayfası oluşturuyoruz
-@app.route("/register")
+@app.route("/register", methods = ["GET", "POST"])
 def register():
-    return render_template("register.html")
+    form = RegisterForm(request.form)
+    if request.method == "POST": # POST request ise url_for ile main'e yönlendiriyoruz.
+        return redirect(url_for("main"))
+    else:
+        return render_template("register.html", form=form)
 
 # Dinamik URL Tanımlama
 @app.route('/article/<string:id>')

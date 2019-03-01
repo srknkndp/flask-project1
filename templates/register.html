@@ -1,7 +1,19 @@
-{% include 'layout.html' %}
+{% extends "layout.html" %}
 
 {% block body %}
+        <!-- formhelpers.htmlini referans alıyoruz.-->
+        {% from "includes/formhelpers.html" import render_field %}
     <h3>Kayıt Olun</h3>
     <hr>
+        <form method=post>
+            {{ render_field(form.name, class= "form-control") }}
+            {{ render_field(form.username, class= "form-control") }}
+            {{ render_field(form.email, class= "form-control") }}
+            {{ render_field(form.password, class= "form-control") }}
+            {{ render_field(form.confirm, class= "form-control") }}
+            <!--Butonu https://www.w3schools.com/bootstrap4/bootstrap_buttons.asp type buttondan submite değişti-->
+            <button type="submit" class="btn btn-primary">Kayıt Ol</button>
+        </form>
+        
 
 {% endblock body %}
