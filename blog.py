@@ -47,7 +47,18 @@ def about():
 @app.route("/register", methods = ["GET", "POST"])
 def register():
     form = RegisterForm(request.form)
-    if request.method == "POST": # POST request ise url_for ile main'e yönlendiriyoruz.
+    if request.method == "POST" and form.validate(): # POST request ise url_for ile main'e yönlendiriyoruz.
+        name = form.name.data
+        username = form.username.data
+        email = form.email.data
+        password = form.password.data # Şifrelemek istersek sha256_crypt.encrypt() fonksiyonunu kullanmalıyız.
+        # Phpmyadmin üzerinde işlem yapmak için cusor oluşturuyoruz.
+        cursor = mysql.connection.cursor()
+        # SQL Sorgumuz
+        sorgu = "Insert into users(name,username,email,password) VALUES(%s,%s,%s,%s)"
+        cursor.execute(sorgu,(name,username,email,password)) # Demet olarak execute ediyoruz
+        mysql.connection.commit() # Veri tabınındaki bilgileri güncellemiş olduk. Silme, ekleme gibi durumlarda
+        cursor.close()
         return redirect(url_for("main"))
     else:
         return render_template("register.html", form=form)
