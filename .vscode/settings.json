@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "C:\\Users\\SERKANK\\Anaconda3\\envs\\py37\\python.exe",
+    "python.pythonPath": "C:\\Users\\SERKAN\\Anaconda3\\python.exe",
     "python.linting.pylintEnabled": false,
     "editor.tabCompletion": "onlySnippets"
 }

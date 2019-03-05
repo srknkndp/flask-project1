@@ -4,11 +4,13 @@ Gerekli modüller için pip install komutları
 - pip install flask-mysqldb
 - pip install passlib
 """
-
+from forms import RegisterForm, LoginForm 
 from flask import Flask, render_template, flash, redirect, url_for, session, logging, request
 from flask_mysqldb import MySQL
-from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from passlib.hash import sha256_crypt
+#from datetime import datetime
+#today = datetime.today()
+#now = datetime.strftime(today, format="%Y-%m-%dT%H:%M:%S")
 
 app = Flask(__name__)
 
@@ -16,20 +18,13 @@ app = Flask(__name__)
 app.config["MYSQL_HOST"] = "localhost"
 app.config["MYSQL_USER"] = "root"
 app.config["MYSQL_PASSWORD"] = ""
-app.config["MYSQL_DB"] = "flask_blog"
+app.config["MYSQL_DB"] = "projectflask"
 app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 mysql = MySQL(app)
+app.secret_key = "EDEL" #Flash mesajlarını yayınlamamız için secret key gerekiyor.
 
-# User register form (WTF formlarını Flask ile uyumunu kontrol et)
-class RegisterForm(Form):
-    name = StringField("İsim Soyisim", validators = [validators.Length(min=4, max=25)])
-    username = StringField("Kullanıcı Adı", validators = [validators.Length(min=5, max=35)])
-    email = StringField("Email Adresi", validators = [validators.Email(message="Lütfen geçerli bir email adresi giriniz!")])
-    password = PasswordField("Parola", validators = [validators.DataRequired(message="Lütfen bir parola belirleyin!!!"),
-                                                    validators.EqualTo(fieldname="confirm", message="Parolanız uyuşmuyor!!!")])
-    confirm = PasswordField("Parola Doğrula")
-
+#Ana Sayfa
 @app.route('/')
 def main():
     articles = [
@@ -39,9 +34,16 @@ def main():
     ]
     return render_template("index.html", articles = articles)
 
+#Hakkında sayfası
 @app.route("/about")
 def about():
     return render_template("about.html")
+
+#Login İşlemi
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    form = LoginForm(request.form)
+    return render_template("login.html", form=form)
 
 # Kayıt sayfası oluşturuyoruz
 @app.route("/register", methods = ["GET", "POST"])
@@ -55,11 +57,13 @@ def register():
         # Phpmyadmin üzerinde işlem yapmak için cusor oluşturuyoruz.
         cursor = mysql.connection.cursor()
         # SQL Sorgumuz
-        sorgu = "Insert into users(name,username,email,password) VALUES(%s,%s,%s,%s)"
+        sorgu = "INSERT into users(name,username,email,password) VALUES(%s,%s,%s,%s)"
         cursor.execute(sorgu,(name,username,email,password)) # Demet olarak execute ediyoruz
         mysql.connection.commit() # Veri tabınındaki bilgileri güncellemiş olduk. Silme, ekleme gibi durumlarda
         cursor.close()
-        return redirect(url_for("main"))
+        #layout içerisine dahil ettiğimiz flash message burada veriyoruz
+        flash("Başarıyla Kayıt Oldunuz.", "success")
+        return redirect(url_for("login"))
     else:
         return render_template("register.html", form=form)
 

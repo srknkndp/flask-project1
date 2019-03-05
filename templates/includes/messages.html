@@ -1,0 +1,14 @@
+<!--Flash mesajları için http://flask.pocoo.org/docs/0.12/patterns/flashing/-->
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    
+    {% for category, message in messages %}
+      <div class="alert alert-{{category}}" role="alert">
+        <strong>Tebrikler!</strong> {{message}}
+      </div>
+      
+    {% endfor %}
+    
+  {% endif %}
+{% endwith %}
