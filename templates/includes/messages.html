@@ -5,7 +5,11 @@
     
     {% for category, message in messages %}
       <div class="alert alert-{{category}}" role="alert">
-        <strong>Tebrikler!</strong> {{message}}
+        {% if category == "success" %}
+          <strong>Tebrikler!</strong> {{message}}
+        {% else %}
+          <strong>Başarısız!</strong> {{message}}
+        {% endif %}
       </div>
       
     {% endfor %}

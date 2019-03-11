@@ -40,9 +40,31 @@ def about():
     return render_template("about.html")
 
 #Login İşlemi
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login", methods = ["GET", "POST"])
 def login():
     form = LoginForm(request.form)
+    if request.method == "POST":
+        username = form.username.data
+        password_entered = form.password.data
+        cursor = mysql.connection.cursor()
+        sorgu = "SELECT * FROM users where username = %s"
+        result = cursor.execute(sorgu, (username,))
+        if result > 0:
+            data = cursor.fetchone()
+            real_password = data["password"]
+            if password_entered == real_password:
+                flash("Giriş yaptınız", "success")
+                # Session kontrolünü yapıyoruz
+                session["logged_in"] = True
+                session["username"] = username
+                return redirect(url_for("main"))
+            else: # Parola yanlışsa
+                flash("Parolanız yanlış!!!", "danger")
+                return redirect(url_for("login"))
+        else:
+            # Kullanıcı yoksa   
+            flash("Böyle bir kullanıcı bulunmuyor!!!", "danger")
+            return redirect(url_for("login"))
     return render_template("login.html", form=form)
 
 # Kayıt sayfası oluşturuyoruz
@@ -53,7 +75,7 @@ def register():
         name = form.name.data
         username = form.username.data
         email = form.email.data
-        password = form.password.data # Şifrelemek istersek sha256_crypt.encrypt() fonksiyonunu kullanmalıyız.
+        password = sha256_crypt.encrypt(form.password.data) # Şifrelemek istersek sha256_crypt.encrypt() fonksiyonunu kullanmalıyız.
         # Phpmyadmin üzerinde işlem yapmak için cusor oluşturuyoruz.
         cursor = mysql.connection.cursor()
         # SQL Sorgumuz
@@ -66,6 +88,12 @@ def register():
         return redirect(url_for("login"))
     else:
         return render_template("register.html", form=form)
+
+# Logout işlemi
+@app.route("/logout")
+def logout():
+    session.clear() # Sessionu temizliyoruz
+    return redirect(url_for("main"))
 
 # Dinamik URL Tanımlama
 @app.route('/article/<string:id>')
