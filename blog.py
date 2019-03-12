@@ -95,6 +95,11 @@ def logout():
     session.clear() # Sessionu temizliyoruz
     return redirect(url_for("main"))
 
+# Dashboard için
+@app.route("/dashboard")
+def dashboard():
+    return render_template("dashboard.html")
+
 # Dinamik URL Tanımlama
 @app.route('/article/<string:id>')
 def detail(id):
