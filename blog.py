@@ -4,7 +4,7 @@ Gerekli modüller için pip install komutları
 - pip install flask-mysqldb
 - pip install passlib
 """
-from forms import RegisterForm, LoginForm 
+from forms import RegisterForm, LoginForm, login_required
 from flask import Flask, render_template, flash, redirect, url_for, session, logging, request
 from flask_mysqldb import MySQL
 from passlib.hash import sha256_crypt
@@ -96,7 +96,9 @@ def logout():
     return redirect(url_for("main"))
 
 # Dashboard için
+# Decorator kontrolü
 @app.route("/dashboard")
+@login_required
 def dashboard():
     return render_template("dashboard.html")
 
